@@ -1,8 +1,10 @@
 class Rar < Formula
   desc "archive manager for RAR/ZIP file formats"
   homepage "http://www.rarlab.com"
-  url "http://www.rarlab.com/rar/rarosx-5.3.0.tar.gz"
-  sha256 "1a2a4fc7a146a9847386d6e0165bf7bfc540a3d559b15c74d3be42d37c6409cf"
+  url "http://www.rarlab.com/rar/rarosx-5.4.0.tar.gz"
+  version "5.40"
+  sha256 "09a14f40718c68fc1c24b30acb55d0f2f90f3e13b372c48b6ef1e789d748b754"
+  version_scheme 1
 
   bottle :unneeded
 
@@ -17,5 +19,14 @@ class Rar < Formula
     etc.install "rarfiles.lst"
     doc.install "acknow.txt", "order.htm", "rar.txt", "whatsnew.txt"
     man1.install resource("man")
+  end
+
+  test do
+    cp test_fixtures("test.wav"), "test_orig.wav"
+    system bin/"rar", "a", "test.rar", "test_orig.wav"
+    system bin/"rar", "rn", "test.rar", "test_orig.wav", "test.wav"
+    assert_match "test.wav", shell_output("#{bin}/rar l test.rar")
+    system bin/"rar", "x", "test.rar"
+    cmp "test.wav", "test_orig.wav"
   end
 end
